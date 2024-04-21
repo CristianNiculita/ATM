@@ -1,5 +1,8 @@
 import java.sql.*;
+import java.util.Random;
 import java.util.Scanner;
+
+import static java.lang.Long.parseLong;
 
 public class Case {
     private Connection con;
@@ -178,31 +181,14 @@ public class Case {
     }
 
     public void createCard() throws Exception {
-        int min = 10000000; // Minimum value of range
-        int max = 99999999; // Maximum value of range
-        boolean check = false;
-        long cardnumber = 0;
-        while (check == false) {
-            cardnumber = 00000000;
-            boolean debitCheck = true;
-            boolean creditCheck = true;
-            int random_int = (int) Math.floor(Math.random() * (max - min + 1) + min);//random card number
-            cardnumber = cardnumber + random_int;//generate number card
-            ps = con.prepareStatement("SELECT * FROM debit_card WHERE cardNumber = ?");
-            ps.setLong(1, cardnumber);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                debitCheck = false;
-            }
-            ps = con.prepareStatement("SELECT * FROM credit_card WHERE cardNumber = ?");
-            ps.setLong(1, cardnumber);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                creditCheck = false;
-            }
-            if (debitCheck == true && creditCheck == true) {
-                check = true;
-            }
+        int min = 1000; // Minimum value of range
+        int max = 9999; // Maximum value of range
+        String commonNumber = "1234";
+        long cardnumber = parseLong( commonNumber + new Random().nextInt(min, max));//random card number
+        boolean cardExist = verifyCardExist(cardnumber);
+        while (cardExist) {
+            cardnumber = parseLong( commonNumber + new Random().nextInt(min, max));
+            cardExist = verifyCardExist(cardnumber);
         }
 
         System.out.println("Insert card type :");
@@ -235,5 +221,23 @@ public class Case {
 
 
         }
+
     }
+    public boolean verifyCardExist (long cardnumber) throws SQLException {
+        ps = con.prepareStatement("SELECT * FROM debit_card WHERE cardNumber = ?");
+        ps.setLong(1, cardnumber);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            return true;
+        }
+
+        ps = con.prepareStatement("SELECT * FROM credit_card WHERE cardNumber = ?");
+        ps.setLong(1, cardnumber);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            return true;
+        }
+        return false;
+    }
+
 }
