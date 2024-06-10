@@ -1,3 +1,5 @@
+package com.example.atm;
+
 abstract  public class Card {
     private double balance;
     private String owner;
@@ -36,16 +38,14 @@ abstract  public class Card {
         return pin;
     }
 
-    abstract void withdrawal(double amount);
+    abstract boolean withdrawal(double amount);
 
     public void deposit(double amount) {
         balance = balance + amount;
-        System.out.println("Deposit : " + amount + "\nThe new balance : " + balance);
-
     }
 
-    public void checkBalance() {
-        System.out.println("\nYour balance is : " + balance);
+    public double checkBalance() {
+        return balance;
     }
 
 

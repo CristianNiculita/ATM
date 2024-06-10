@@ -1,7 +1,6 @@
+package com.example.atm;
+
 public class DebitCard extends Card {
-
-
-
     public DebitCard(double balance, String owner, long numberCard, short pin) {
         super.setBalance(balance);
         super.setOwner(owner);
@@ -10,20 +9,14 @@ public class DebitCard extends Card {
 
     }
 
-
-
-    void withdrawal(double amount) {
+    boolean withdrawal(double amount) {
         if (super.getBalance() >= amount) {
             super.setBalance(super.getBalance() - amount);
-            System.out.println("Withdrawal : " + amount + "\nThe new balance : " + super.getBalance());
-
+            return true;
         } else {
-            System.out.println("Insufficient founds");
+            return false;
         }
-
     }
-
-
 }
 
 
